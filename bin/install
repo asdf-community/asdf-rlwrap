@@ -51,7 +51,7 @@ function install_rlwrap() {
           ./configure --prefix="$install_path" >/dev/null || fail "Could not configure"
         ;;
       linux*)
-        ./configure --prefix="$install_path" || fail "Could not configure"
+        ./configure --prefix="$install_path" >/dev/null || fail "Could not configure"
         ;;
       *)
         fail "Unsupported platform..."
