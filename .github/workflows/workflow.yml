@@ -20,7 +20,7 @@ jobs:
         if: matrix.os == 'macos-latest'
 
       - name: Install prerequirement dependency for Ubuntu
-        run: apt install readline
+        run: sudo apt-get install readline
         if: matrix.os == 'ubuntu-latest'
 
       - name: Install asdf
