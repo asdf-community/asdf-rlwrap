@@ -42,6 +42,9 @@ function install_rlwrap() {
     tar zxf "$source_path" -C "$distination" --strip-components=1
     cd "$distination"
 
+    echo "∗ Recreating configure file..."
+    autoreconf --install 2>/dev/null || fail "Could not recreate configure file"
+
     echo "∗ Configuring..."
     case "$OSTYPE" in
       darwin*)
