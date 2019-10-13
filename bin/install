@@ -43,7 +43,17 @@ function install_rlwrap() {
     cd "$distination"
 
     echo "∗ Configuring..."
-    ./configure --prefix="$install_path" --disable-debug --disable-dependency-tracking >/dev/null || fail "Could not configure"
+
+    case "$OSTYPE" in
+      darwin*)
+        CPPFLAGS="-I$(brew --prefix readline)/include" \
+        CFLAGS="-I$(brew --prefix readline)/include" \
+        LDFLAGS="-L$(brew --prefix readline)/lib" \
+          ./configure --prefix="$install_path" >/dev/null || fail "Could not configure"
+        ;;
+      linux*) ./configure --prefix="$install_path" >/dev/null || fail "Could not configure" ;;
+      *) fail "Unsupported platform..." ;;
+    esac
 
     echo "∗ Compiling..."
     make &>log.make || fail "Could not compile"
