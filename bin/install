@@ -43,7 +43,6 @@ function install_rlwrap() {
     cd "$distination"
 
     echo "∗ Configuring..."
-
     case "$OSTYPE" in
       darwin*)
         CPPFLAGS="-I$(brew --prefix readline)/include" \
