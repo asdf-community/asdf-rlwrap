@@ -1,0 +1,31 @@
+name: Main workflow
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+        rlwrap: [0.41, 0.43]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Install prerequirement dependency for macOS
+        run: brew install readline
+        if: matrix.os == 'macos-latest'
+
+      - name: Install asdf
+        run: git clone https://github.com/asdf-vm/asdf.git $HOME/asdf
+
+      - name: Install rlwrap and run test
+        run: |
+          . $HOME/asdf/asdf.sh
+          asdf plugin-add rlwrap $GITHUB_WORKSPACE
+          asdf install rlwrap ${{ matrix.rlwrap }}
+          asdf global rlwrap ${{ matrix.rlwrap }}
+          rlwrap --version
