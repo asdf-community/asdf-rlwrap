@@ -1,6 +1,6 @@
 <div align="center">
 <h1>asdf-rlwrap 📦</h1>
-rlwrap plugin for asdf version manager
+<span><a href="https://github.com/hanslub42/rlwrap">rlwrap</a> plugin for asdf version manager</span>
 </div>
 <hr />
 
