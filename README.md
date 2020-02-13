@@ -5,7 +5,7 @@
 <hr />
 
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/asdf-community/asdf-rlwrap/Main%20workflow?style=flat-square)](https://github.com/asdf-community/asdf-rlwrap/actions)
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![License](https://img.shields.io/github/license/asdf-community/asdf-rlwrap?style=flat-square&color=brightgreen)](https://github.com/asdf-community/asdf-rlwrap/blob/master/LICENSE)
 
@@ -42,6 +42,7 @@ Thanks goes to these wonderful people
 <table>
   <tr>
     <td align="center"><a href="https://bsky.moe"><img src="https://avatars3.githubusercontent.com/u/38746192?v=4" width="100px;" alt=""/><br /><sub><b>BSKY</b></sub></a><br /><a href="https://github.com/asdf-community/asdf-rlwrap/commits?author=imbsky" title="Code">💻</a> <a href="https://github.com/asdf-community/asdf-rlwrap/commits?author=imbsky" title="Documentation">📖</a> <a href="#maintenance-imbsky" title="Maintenance">🚧</a> <a href="#infra-imbsky" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+    <td align="center"><a href="https://sasurau4.github.io/profile/"><img src="https://avatars3.githubusercontent.com/u/13580199?v=4" width="100px;" alt=""/><br /><sub><b>Daiki Ihara</b></sub></a><br /><a href="#infra-sasurau4" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
   </tr>
 </table>
 
