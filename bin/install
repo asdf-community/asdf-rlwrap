@@ -1,21 +1,19 @@
 #!/usr/bin/env bash
-#
-# Copyright 2019 asdf-rlwrap authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
 
-set -eo pipefail
+set -Eeuo pipefail
+
+trap cleanup SIGINT SIGTERM ERR
+
+tmp_download_dir=$(mktemp -d)
+
+cleanup() {
+  trap - SIGINT SIGTERM ERR
+  rm -rf "$ASDF_INSTALL_PATH" "$tmp_download_dir"
+  echo
+  echo -e "\e[33mCleanup:\e[m Something went wrong!"
+  echo
+  echo "$(caller): ${BASH_COMMAND}"
+}
 
 fail() {
   echo -e "\e[31mFail:\e[m $*"
@@ -33,51 +31,33 @@ install_rlwrap() {
 
   local download_url="https://github.com/hanslub42/rlwrap/archive/v${version}.tar.gz"
   local file_name="rlwrap-${version}.tar.gz"
-  local tmp_download_dir
-  tmp_download_dir=$(mktemp -d -t rlwrap_tmp_XXXXXX)
 
   local source_path="${tmp_download_dir}/${file_name}"
   local distination="${tmp_download_dir}/dist"
 
-  (
-    echo "∗ Downloading rlwrap source..."
-    curl --silent --location --create-dirs --output "$source_path" "$download_url" || fail "Could not download rlwrap $version"
-    mkdir -p "$distination"
-    tar zxf "$source_path" -C "$distination" --strip-components=1
-    cd "$distination"
-
-    echo "∗ Recreating configure file..."
-    autoreconf --install 2>/dev/null || fail "Could not recreate configure file"
-
-    echo "∗ Configuring..."
-    case "$OSTYPE" in
-      darwin*)
-        CPPFLAGS="-I$(brew --prefix readline)/include" \
-        CFLAGS="-I$(brew --prefix readline)/include" \
-        LDFLAGS="-L$(brew --prefix readline)/lib" \
-          ./configure --prefix="$install_path" >/dev/null || fail "Could not configure"
-        ;;
-      linux*)
-        ./configure --prefix="$install_path" >/dev/null || fail "Could not configure"
-        ;;
-      *)
-        fail "Unsupported platform..."
-        ;;
-    esac
-
-    echo "∗ Compiling..."
-    make &>log.make || fail "Could not compile"
-
-    echo "∗ Installing..."
-    make install >/dev/null || fail "Could not install"
-
-    echo "The installation was successful!"
-  ) || (
-    rm -rf "$install_path"
-    fail "An error occurred"
-  )
-
-  rm -rf "$tmp_download_dir"
+  echo "∗ Downloading rlwrap source..."
+  curl --silent --location --create-dirs --output "$source_path" "$download_url"
+  mkdir -p "$distination"
+  tar zxf "$source_path" -C "$distination" --strip-components=1
+  cd "$distination"
+  autoreconf --install
+  case "$OSTYPE" in
+    darwin*)
+      CPPFLAGS="-I$(brew --prefix readline)/include" \
+      CFLAGS="-I$(brew --prefix readline)/include" \
+      LDFLAGS="-L$(brew --prefix readline)/lib" \
+        ./configure --prefix="$install_path"
+      ;;
+    linux*)
+      ./configure --prefix="$install_path"
+      ;;
+    *)
+      fail "Unsupported platform..."
+      ;;
+  esac
+  make &>log.make
+  make install
+  echo "The installation was successful!"
 }
 
 install_rlwrap "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"

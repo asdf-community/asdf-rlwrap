@@ -1,14 +1,8 @@
 name: Main workflow
 
 on:
-  push:
-    paths-ignore:
-      - "**.md"
-      - ".all-contributorsrc"
   pull_request:
-    paths-ignore:
-      - "**.md"
-      - ".all-contributorsrc"
+  push:
   schedule:
     - cron: "0 0 * * 5"
 
@@ -16,7 +10,9 @@ jobs:
   plugin_test:
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest]
+        os:
+          - macos-latest
+          - ubuntu-latest
 
     runs-on: ${{ matrix.os }}
 
@@ -34,25 +30,27 @@ jobs:
         with:
           command: rlwrap --version
         env:
-          GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_API_TOKEN: ${{ github.token }}
 
   test:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install asdf
-        run: git clone https://github.com/asdf-vm/asdf.git $HOME/asdf
+      - name: Set up asdf
+        uses: asdf-vm/actions/setup@v1
+
+      - name: Install bats-core
+        run: brew install bats-core
 
       - name: Test plugin
-        env:
-          GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          . $HOME/asdf/asdf.sh
           asdf plugin-add rlwrap $GITHUB_WORKSPACE
           bats test
+        env:
+          GITHUB_API_TOKEN: ${{ github.token }}
 
   lint:
     runs-on: ubuntu-latest
@@ -61,11 +59,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install shellcheck
+        run: brew install shellcheck
+
       - name: Run ShellCheck
         run: shellcheck bin/*
 
   format:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
