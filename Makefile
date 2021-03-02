@@ -1,4 +1,4 @@
-SH_SRCFILES = $(shell git ls-files "bin/*" "*.bash")
+SH_SRCFILES = $(shell git ls-files "bin/*")
 SHFMT_BASE_FLAGS = -s -i 2 -ci
 
 fmt:
